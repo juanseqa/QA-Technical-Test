@@ -1,0 +1,16 @@
+{
+  "name": "qa-prueba-buggy-starter",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "report": "playwright show-report",
+    "lint": "echo \"(opcional) agrega eslint/prettier\"",
+    "a11y:axe": "node automation/playwright/tools/axe-scan.mjs || true"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.0",
+    "@playwright/test": "^1.47.0"
+  }
+}
