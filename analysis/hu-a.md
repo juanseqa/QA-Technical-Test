@@ -19,7 +19,7 @@
 - Observabilidad: logs de eventos de auth sin datos sensibles
 
 ## Riesgos y mitigación
-- Colisión de username → usar sufijos aleatorios y validaciones previas
-- Mensajes inconsistentes → catálogo de mensajes y pruebas de i18n
-- Sesiones no persistentes → pruebas de recarga/navegación
-- Rate limiting ausente → pruebas de estrés negativo y recomendaciones
+- Colisión de username → Implementar validaciones en backend para verificar si el username ya existe y mostrar un mensaje claro.
+- Mensajes inconsistentes → Crear un catálogo centralizado de mensajes.
+- Sesiones no persistentes → Validar que se use un token/cookie seguro y que la sesión se mantenga hasta que expire o se cierre.
+- Rate limiting ausente (si no hay un límite de intentos de login, un atacante podría hacer fuerza bruta para adivinar contraseñas.) → Recomendar implementación de rate limiting o CAPTCHA después de varios intentos.
