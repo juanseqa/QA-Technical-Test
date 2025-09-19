@@ -31,5 +31,5 @@ El contrato de respuesta esperado está definido en `api/contract-schemas/login.
 
 **Evidencia:**
 - Colección Postman `api/postman_collection.json` con los 4 escenarios.  
-- Capturas de ejecución mostrando códigos de estado y respuestas.  
+- Capturas de ejecución ![alt text](image.png) ![alt text](image-1.png) ![alt text](image-2.png) ![alt text](image-3.png)
 - Contrato definido en `api/contract-schemas/login.schema.json`.  
