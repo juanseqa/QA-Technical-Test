@@ -1,1 +1,65 @@
-Agrega aquí p95, avg, RPS y tu interpretación tras ejecutar el script.
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: performance/k6-script.js
+        output: -
+
+     scenarios: (100.00%) 3 scenarios, 20 max VUs, 5m30s max duration (incl. graceful stop):
+              * ramp: Up to 15 looping VUs for 2m0s over 1 stages (gracefulRampDown: 30s, gracefulStop: 30s)
+              * smoke: 1 looping VUs for 1m0s (gracefulStop: 30s)
+              * soak: 5 looping VUs for 5m0s (gracefulStop: 30s)
+
+
+
+  █ THRESHOLDS
+
+    http_req_duration
+    ✓ 'p(95)<800' p(95)=724.59ms
+
+    http_req_failed
+    ✓ 'rate<0.02' rate=0.00%
+
+
+  █ TOTAL RESULTS
+
+    checks_total.......: 1548    5.143522/s
+    checks_succeeded...: 100.00% 1548 out of 1548
+    checks_failed......: 0.00%   0 out of 1548
+
+    ✓ status 200
+
+    HTTP
+    http_req_duration..............: avg=603ms min=20.04ms med=710.17ms max=1.06s p(90)=719.5ms p(95)=724.59ms
+      { expected_response:true }...: avg=603ms min=20.04ms med=710.17ms max=1.06s p(90)=719.5ms p(95)=724.59ms
+    http_req_failed................: 0.00%  0 out of 1548
+    http_reqs......................: 1548   5.143522/s
+
+    EXECUTION
+    iteration_duration.............: avg=1.6s  min=1.02s   med=1.71s    max=2.06s p(90)=1.72s   p(95)=1.72s
+    iterations.....................: 1548   5.143522/s
+    vus............................: 5      min=5         max=19
+    vus_max........................: 20     min=20        max=20
+
+    NETWORK
+    data_received..................: 1.9 MB 6.2 kB/s
+    data_sent......................: 74 kB  247 B/s
+                                                                                                                                                                                                                          
+running (5m01.0s), 00/20 VUs, 1548 complete and 0 interrupted iterations                                                                                                                                                  
+ramp  ✓ [======================================] 00/15 VUs  2m0s                                                                                                                                                          
+smoke ✓ [======================================] 1 VUs      1m0s                                                                                                                                                          
+soak  ✓ [======================================] 5 VUs      5m0s  
+
+
+Interpretación
+- Cumple todos los thresholds definidos (disponibilidad y latencia).
+- La distribución está concentrada alrededor de ~710 ms (p90≈p95≈mediana), con picos moderados hasta 1.06 s.
+- RPS (~5.14) es bajo por diseño del script (sleep(1) y escenarios suaves). No indica límite del servidor, sino think time del cliente y la carga moderada (máx. ~19 VUs efectivos).
+- Estabilidad: sin fallos durante smoke, ramp (1→15 VUs en 2m) y soak (5 VUs por 5m). No se observan degradaciones ni error bursts.
+
+Conclusión
+- El Service Level Objective (Objetivo de Nivel de Servicio) propuesto (p95 < 800 ms, errores < 2%) se cumple con margen (~75 ms de holgura en p95).
+- Para esta carga y flujo (GET a la home), el sistema se comporta estable y predecible.
